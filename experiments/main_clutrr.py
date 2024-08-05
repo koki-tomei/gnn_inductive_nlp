@@ -24,7 +24,7 @@ print("pid:", os.getpid())
 # print ("conda env:", os.environ['CONDA_DEFAeULT_ENV'])
 print("screen: %s" % subprocess.check_output("echo $STY", shell=True).decode("utf"))
 print("gpu: %s" % subprocess.check_output("echo $CUDA_VISIBLE_DEVICES", shell=True).decode("utf"))
-os.environ["WANDB_CACHE_DIR"] = "/workdir/wandb"
+os.environ["WANDB_CACHE_DIR"] = os.path.join(os.path.dirname(os.path.abspath("")), "wandb")
 
 
 def evaluate_accuracy(eval_set, model):
@@ -482,7 +482,6 @@ def train(args, run):
     print("\twhole encoder total:", wenum_params)
     print("\twhole unfreeze total:", dnum_params + enum_params)
 
-    assert False
     if True:
         best_test_accuracies = {}
         test_accs_devbest = {}

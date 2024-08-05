@@ -1,0 +1,84 @@
+23d6a65c774d
+pid: 37625
+screen: 
+
+gpu: 0,1
+
+Namespace(LMentemb=True, LMrelemb=True, att_head_num=2, batch_size=100, classify_relation=18, clutrr=True, compile_mlp_queryrep=False, concept_in_dim=100, concept_num=40, cuda=True, data_artifact_dir='data_db9b8f04_relationEnt_onechoice', data_id='data_db9b8f04', dataset='clutrr', debug=False, decoder_lr=0.001, decoder_model='compile', dev_adj='NoneS', dev_statements='NoneS', drop_partial_batch=False, dropoutf=0.2, dropoutg=0.2, dropouti=0.2, edge_pruning_order='const', edge_pruning_ratio=0.5, edge_scoring=True, edgeent_position='forp', encoder='roberta-large', encoder_layer=-1, encoder_lr=1e-05, ent_emb=['tzw'], ent_emb_paths=['data/cpnet/tzw.ent.npy'], ent_format='relation', eval_batch_size=98, fc_dim=100, fc_layer_num=1, fc_linear_sent=False, fill_partial_batch=False, fp16=True, freeze_ent_emb=True, gnn_dim=100, inhouse=False, inhouse_train_qids='data/clutrr/inhouse_split_qids.txt', init_range=0.02, initemb_method='onehot-LM', k=5, last_unfreeze_layer=1, load_model_path=None, log_interval=50, loss='cross_entropy', lr_schedule='fixed', max_epochs_before_stop=10, max_grad_norm=1.0, max_node_num=13, max_seq_len=-100, mini_batch_size=100, mode='train', model_art_pname='qagnn-entrel', modelsavedir_local='saved_models/tmp_model', n_epochs=200, num_relation=8, one_choice=True, optim='radam', refreeze_epoch=10000, save_dir='saved_models/clutrr/enc-roberta-large__k5__gnndim100__bs100__seed0__20240804_120530', save_model=False, scored_edge_norm='disabled', seed=0, sentence_level=False, simple=False, start_pruning_epoch=40, subsample=1.0, sweep=False, test_adj='NoneS', test_statements='NoneS', testk=-1, train_adj='NoneS', train_statements='data/clutrr/data_db9b8f04_relationEnt_onechoice/after_processTESTdata.pkl', unfreeze_epoch=1000, use_cache=True, valid_set=0.1, wandbmode='disabled', warmup_steps=150, weight_decay=0.01, wnb_project='gnn-inductive')
+| num_concepts: 40 |
+model_type roberta
+train_statement_path data/clutrr/data_db9b8f04_relationEnt_onechoice/after_processTESTdata.pkl
+train_sample_num: 13574
+dev_sample_num: 1509
+clutrr train_max_seqlen: 249
+clutrr test_max_seqlens: [249, 249, 249, 249, 249, 249, 267, 307, 327]
+num_choice 1
+args.num_relation 8
+parameters:
+ ===decoder===
+	fc.layers.0-Linear.weight                    	trainable	torch.Size([100, 1524])	device:cuda:0
+	fc.layers.0-Linear.bias                      	trainable	torch.Size([100])	device:cuda:0
+	fc.layers.0-LayerNorm.weight                 	trainable	torch.Size([100])	device:cuda:0
+	fc.layers.0-LayerNorm.bias                   	trainable	torch.Size([100])	device:cuda:0
+	fc.layers.1-Linear.weight                    	trainable	torch.Size([18, 100])	device:cuda:0
+	fc.layers.1-Linear.bias                      	trainable	torch.Size([18])	device:cuda:0
+	Wi_node_context.weight                       	trainable	torch.Size([100, 1029])	device:cuda:0
+	Wi_node_non_context.weight                   	trainable	torch.Size([100, 1029])	device:cuda:0
+	Wi_edge_context.weight                       	trainable	torch.Size([100, 2056])	device:cuda:0
+	Wi_edge_non_context.weight                   	trainable	torch.Size([100, 2056])	device:cuda:0
+	edge_scoring_linear.weight                   	trainable	torch.Size([1, 2048])	device:cuda:0
+	edge_scoring_linear.bias                     	trainable	torch.Size([1])	device:cuda:0
+	edge_feat2emb.weight                         	trainable	torch.Size([100, 110])	device:cuda:0
+	input_attention1.weight                      	trainable	torch.Size([100, 200])	device:cuda:0
+	input_attention2.weight                      	trainable	torch.Size([1, 100])	device:cuda:0
+	W_h_bond_0.weight                            	trainable	torch.Size([100, 100])	device:cuda:0
+	Attention1_0.weight                          	trainable	torch.Size([100, 200])	device:cuda:0
+	Attention2_0.weight                          	trainable	torch.Size([1, 100])	device:cuda:0
+	W_h_bond_1.weight                            	trainable	torch.Size([100, 100])	device:cuda:0
+	Attention1_1.weight                          	trainable	torch.Size([100, 200])	device:cuda:0
+	Attention2_1.weight                          	trainable	torch.Size([1, 100])	device:cuda:0
+	W_h_bond_2.weight                            	trainable	torch.Size([100, 100])	device:cuda:0
+	Attention1_2.weight                          	trainable	torch.Size([100, 200])	device:cuda:0
+	Attention2_2.weight                          	trainable	torch.Size([1, 100])	device:cuda:0
+	W_h_bond_3.weight                            	trainable	torch.Size([100, 100])	device:cuda:0
+	Attention1_3.weight                          	trainable	torch.Size([100, 200])	device:cuda:0
+	Attention2_3.weight                          	trainable	torch.Size([1, 100])	device:cuda:0
+	W_o.weight                                   	trainable	torch.Size([100, 200])	device:cuda:0
+	W_o.bias                                     	trainable	torch.Size([100])	device:cuda:0
+	gru.bias                                     	trainable	torch.Size([100])	device:cuda:0
+	gru.gru.weight_ih_l0                         	trainable	torch.Size([300, 100])	device:cuda:0
+	gru.gru.weight_hh_l0                         	trainable	torch.Size([300, 100])	device:cuda:0
+	gru.gru.bias_ih_l0                           	trainable	torch.Size([300])	device:cuda:0
+	gru.gru.bias_hh_l0                           	trainable	torch.Size([300])	device:cuda:0
+	gru.gru.weight_ih_l0_reverse                 	trainable	torch.Size([300, 100])	device:cuda:0
+	gru.gru.weight_hh_l0_reverse                 	trainable	torch.Size([300, 100])	device:cuda:0
+	gru.gru.bias_ih_l0_reverse                   	trainable	torch.Size([300])	device:cuda:0
+	gru.gru.bias_hh_l0_reverse                   	trainable	torch.Size([300])	device:cuda:0
+	communicate_mlp.weight                       	trainable	torch.Size([100, 300])	device:cuda:0
+	W_h_atom_0.weight                            	trainable	torch.Size([100, 100])	device:cuda:0
+	W_h_atom_1.weight                            	trainable	torch.Size([100, 100])	device:cuda:0
+	W_h_atom_2.weight                            	trainable	torch.Size([100, 100])	device:cuda:0
+	W_h_atom_3.weight                            	trainable	torch.Size([100, 100])	device:cuda:0
+	decoder (unfreeze) total: 1136467
+
+-----------------------------------------------------------------------
+Using fp16 training
+	module.encoder.layer.23.attention.self.query.weight	trainable	torch.Size([1024, 1024])	device:cuda:0
+	module.encoder.layer.23.attention.self.query.bias	trainable	torch.Size([1024])	device:cuda:0
+	module.encoder.layer.23.attention.self.key.weight	trainable	torch.Size([1024, 1024])	device:cuda:0
+	module.encoder.layer.23.attention.self.key.bias	trainable	torch.Size([1024])	device:cuda:0
+	module.encoder.layer.23.attention.self.value.weight	trainable	torch.Size([1024, 1024])	device:cuda:0
+	module.encoder.layer.23.attention.self.value.bias	trainable	torch.Size([1024])	device:cuda:0
+	module.encoder.layer.23.attention.output.dense.weight	trainable	torch.Size([1024, 1024])	device:cuda:0
+	module.encoder.layer.23.attention.output.dense.bias	trainable	torch.Size([1024])	device:cuda:0
+	module.encoder.layer.23.attention.output.LayerNorm.weight	trainable	torch.Size([1024])	device:cuda:0
+	module.encoder.layer.23.attention.output.LayerNorm.bias	trainable	torch.Size([1024])	device:cuda:0
+	module.encoder.layer.23.intermediate.dense.weight	trainable	torch.Size([4096, 1024])	device:cuda:0
+	module.encoder.layer.23.intermediate.dense.bias	trainable	torch.Size([4096])	device:cuda:0
+	module.encoder.layer.23.output.dense.weight  	trainable	torch.Size([1024, 4096])	device:cuda:0
+	module.encoder.layer.23.output.dense.bias    	trainable	torch.Size([1024])	device:cuda:0
+	module.encoder.layer.23.output.LayerNorm.weight	trainable	torch.Size([1024])	device:cuda:0
+	module.encoder.layer.23.output.LayerNorm.bias	trainable	torch.Size([1024])	device:cuda:0
+	encoder unfreeze total: 12596224
+	whole encoder total: 355359744
+	whole unfreeze total: 13732691

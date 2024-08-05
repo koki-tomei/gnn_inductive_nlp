@@ -39,15 +39,6 @@ class MySpMM(torch.autograd.Function):
     @staticmethod
     def forward(ctx, sp_mat, dense_mat):
         ctx.save_for_backward(sp_mat, dense_mat)
-
-        """def _to_device(obj, device):
-            if isinstance(obj, (tuple, list)):
-                return [_to_device(item, device) for item in obj]
-            else:
-                return obj.to(device)
-
-        with open("/workdir/viz_workspace/spmm_inputs.pkl", "wb") as f:
-            pkl.dump(_to_device([sp_mat, dense_mat], "cpu"), f)"""
         # dd = dense_mat.dtype
         # まずはfloat32で計算を行う
         # result = torch.mm(sp_mat.to(dtype=torch.float32), dense_mat.to(dtype=torch.float32))
@@ -1195,9 +1186,6 @@ class LM_QAGNN(nn.Module):
         edge2posmask = None
         if self.LMrelemb:
             subj_mask, obj_mask = create_subj_obj_mask(entity_mask, self.edgeent_position)
-            """with open("/workdir/qagnn-main/modeling/somask2edgemask_input.pkl", 'wb') as f:
-                pkl.dump(( _to_device(edge_index,'cpu'),concept_ids.cpu(),subj_mask.cpu(),obj_mask.cpu() ), f)
-            assert False"""
             edge2posmask = convert_somask2edgemask(edge_index, concept_ids, subj_mask, obj_mask)
             # ? list of  (batch_size * choice_num )  (=36)
             # ?each tensor is (2 , edge_num , max_seq_len)
@@ -1226,15 +1214,6 @@ class LM_QAGNN(nn.Module):
             # flatten mask
             edge2lmemb = self.batch_graph_edge2lmemb(edge2lmemb_orig)  #!(totalE , 2, 768or1024)
             assert edge2lmemb.size()[0] == edge_type.size()[0]
-        # pkls=[edge2lmemb_orig,edge2lmemb]
-        # with open("/workdir/viz_workspace/edge2lmemb_orig_and_batched.pkl", 'wb') as f:
-        #    pkl.dump(( _to_device(pkls,'cpu') ), f)
-        # assert False
-        # if (not self.first_batch) and self.LMrelemb :
-        #    pkls=[concept_ids, node_type_ids, adj_lengths, edge_index_orig, edge_type_orig] + [entid2lmemb,edge2lmemb_orig,sent_vecs]
-        #    with open("/workdir/viz_workspace/qagnn2compile_inputs.pkl", 'wb') as f:
-        #        pkl.dump(( _to_device(pkls,'cpu') ), f)
-        #    self.first_batch=True
         if self.decoder_model == "qagnn":
             logits, attn = self.decoder(
                 sent_vecs.to(node_type_ids.device),
@@ -1427,7 +1406,6 @@ class LM_QAGNN_DataLoader(object):
     def _load_clutrr_data(self, args, train_statement_path, model_name, max_seq_length, model_type, testk):
         assert isinstance(testk, list)  # +test for all reasoning length
         with open(train_statement_path, "rb") as f:
-            # path:"/workdir/qagnn-main/data/clutrr/data_089907f8/after_processTRAINdata.pkl"
             datautil = pickle.load(f)
         if args.valid_set:
             if args.valid_set != 0.2:  # default 0.2

@@ -1,7 +1,6 @@
-*__pycache__
 *__pycache__*
 
-/qagnn-main/saved_models/
-/qagnn-main/data/clutrr/
-/qagnn-main/wandb/
+/experiments/saved_models/
+/experiments/data/clutrr/
+/experiments/wandb/
 /.vscode

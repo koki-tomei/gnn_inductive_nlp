@@ -185,7 +185,7 @@ class DataUtility:
         train_data = self._check_data(train_data)
         logging.info("Start preprocessing data")
         if load_dictionary:
-            dictionary_file = os.path.join(base_path, "dict.json")  # TODO
+            dictionary_file = os.path.join(base_path, "dict.json")
             logging.info("Loading dictionary from {}".format(dictionary_file))
             dictionary = json.load(open(dictionary_file))
             # fix id2word keys
@@ -293,7 +293,6 @@ class DataUtility:
                     if self.process_bert:
                         # if bert, then replace the entities with pure numbers, as otherwise we would not
                         # have an unique embedding. Also, make sure the text doesn't contain any numbers before hand
-                        # TODO: remove numbers
                         entity_map[ent] = "{}".format(entity_id)
                         if self.bert_ent_format == "figure":
                             entity_replace_map[ent] = "{}".format(entity_id)
@@ -667,7 +666,6 @@ class DataUtility:
 
     def prepare_qagnn_graphs(self, stem_question, aentity_map, target_word2id, query_edge=None):
         # ?adj, concepts, qm, am, cid2score =adj.pk
-        # TODO: scoring useLM
         max_node_num = 13
         if self.one_choice:
             num_choice = 1
@@ -675,13 +673,7 @@ class DataUtility:
         else:
             num_choice = len(target_word2id)  # 18
 
-        # n_samples = len(adj_concept_pairs) #this is actually n_questions x n_choices
         edge_index, edge_type = [], []
-        # adj_lengths = torch.zeros((n_samples,), dtype=torch.long)
-        # concept_ids = torch.full((n_samples, max_node_num), 1, dtype=torch.long)
-        # node_type_ids = torch.full((n_samples, max_node_num), 2, dtype=torch.long) #!default 2: "other node"
-        # node_scores = torch.zeros((n_samples, max_node_num, 1), dtype=torch.float)
-        # ?n_samples = n_questions, num_choice,
         adj_lengths = torch.zeros((num_choice,), dtype=torch.long)
         concept_ids = torch.full((num_choice, max_node_num), 1, dtype=torch.long)
         node_type_ids = torch.full((num_choice, max_node_num), 2, dtype=torch.long)  #!default 2: "other node"
@@ -740,17 +732,17 @@ class DataUtility:
             target_value = target_word2id[target_key]
             assert type(target_value) == int
             # adj,=
-            concepts = np.array([int(id) + 1 for id in aentity_map.values()] + [target_value])  # TODO: id in sentence +1 , for context_node
+            concepts = np.array([int(id) + 1 for id in aentity_map.values()] + [target_value])
             qm = np.array([1] * len(aentity_map) + [0])
             assert len(concepts) == len(qm)
             am = np.array([0] * len(aentity_map) + [1])
 
             question = "{} {}.".format(stem_question, target_key)
-            # cid2score = get_LM_score(qc_ids+ac_ids+extra_nodes, question) #*original
+            # *cid2score = get_LM_score(qc_ids+ac_ids+extra_nodes, question)
             max_key = max(int(k) for k in self.target_id2word.keys())
             # id2word_filtered = {k: v for k, v in self.id2word.items() if int(k) <= max_key}#!@entの形式なので使えない
             id2word_noalpha = {k: str(k - 1) for k in range(1, max_key)}
-            id2concept = {**id2word_noalpha, **self.target_id2word}  #!キーは1-38 1-20は文中のid0-19にマッピングされ、21-38はリレーション親族関係
+            id2concept = {**id2word_noalpha, **self.target_id2word}  #!キーは1-38 1-20は文中のid0-19にマッピングされ、21-38はリレーション:親族関係
             cid2score = self.cluget_LM_score(list(concepts), question, id2concept, TOKENIZER, LM_MODEL)  #!word2id and target_word2id values
             #!question内のentは0始まりだが、conceptsのidは1始まり。mapはこのギャップを埋める
             # ? dont need sort
@@ -774,7 +766,7 @@ class DataUtility:
 
             # Prepare nodes
             concepts = concepts[: num_concept - 1]
-            concept_ids[idx, 1:num_concept] = torch.tensor(concepts + 1)  #!To accomodate contextnode, original concept_ids incremented by 1 #TODO:id in sentence +2
+            concept_ids[idx, 1:num_concept] = torch.tensor(concepts + 1)  #!To accomodate contextnode, original concept_ids incremented by 1 TODO:id in sentence +2
             concept_ids[idx, 0] = 0  # this is the "concept_id" for contextnode
 
             # Prepare node scores
@@ -1331,16 +1323,15 @@ def collate_geometric(data_list):
     return data, slices
 
 
-def generate_dictionary(config):
+def generate_dictionary(config, parent_dir):
     """
     Before running an experiment, make sure that a dictionary
     is generated
     Check if the dictionary is present, if so then return
     :return:
     """
-    parent_dir = os.path.abspath(os.pardir) + "/qagnn-main"  # TODO
-    dictionary_file = os.path.join(parent_dir, "data/clutrr", config.dataset.data_path_processed, "dict.json")  # TODO
-    if os.path.isfile(dictionary_file):  # TODO
+    dictionary_file = os.path.join(parent_dir, "data/clutrr", config.dataset.data_path_processed, "dict.json")
+    if os.path.isfile(dictionary_file):
         logging.info("Dictionary present at {}".format(dictionary_file))
         return
     logging.info("Creating dictionary with all test files")
@@ -1376,7 +1367,7 @@ def generate_dictionary(config):
         "dummy_entitiy": ds.dummy_entity,
         "entity_map": ds.entity_map,
     }
-    json.dump(dictionary, open(dictionary_file, "w"))  # TODO
+    json.dump(dictionary, open(dictionary_file, "w"))
     logging.info("Saved dictionary at {}".format(dictionary_file))
 
 
@@ -1410,6 +1401,7 @@ if __name__ == "__main__":
 
     with open(config_path, "r") as ymlfile:
         cfg = yaml.safe_load(ymlfile)
+    cfg["dataset"]["train_file"]  = os.path.join(parent_dir,cfg["dataset"]["train_file"])
     raw_dir_local = os.path.join(args.project_root_local, cfg["dataset"]["data_path"])
     if args.test_files == "2-10":
         cfg["dataset"]["test_files"] = [f"{raw_dir_local}/1.{n}_test.csv" for n in range(2, 11)]
@@ -1433,8 +1425,8 @@ if __name__ == "__main__":
         os.mkdir(processed_dir_local)
 
     wandb_config = {"arg_config": args, "yaml_config": cfg}
-    with wandb.init(project="qagnn-train-try", job_type="preprocess-data", config=wandb_config, mode=args.wandbmode) as run:
-        # 🐝 どのArtifactを使用するかを定義し、必要に応じてダウンロード
+    with wandb.init(project="(projectname)", job_type="preprocess-data", config=wandb_config, mode=args.wandbmode) as run:
+
         config = AttrDict(cfg)
 
         if args.register_rawAr:
@@ -1451,8 +1443,7 @@ if __name__ == "__main__":
         )
 
         if args.generate_dictionary_step:
-            generate_dictionary(config)
-        # TODO table = wandb.Table(columns=["image", "label","split"])
+            generate_dictionary(config, parent_dir)
 
         data_util = DataUtility(config)
         data_pkl_path = os.path.join(processed_dir_local, "after_processTRAINdata.pkl")
@@ -1473,4 +1464,3 @@ if __name__ == "__main__":
         processed_dataAr.add_dir(local_path=processed_dir_local, name=config.dataset.data_path_processed)
         # run.use_artifact(processed_dataAr)
         run.log_artifact(processed_dataAr)
-    # ? overrite args( when loading test) , by config ( when loading test)
