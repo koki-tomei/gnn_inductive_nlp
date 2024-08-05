@@ -3,4 +3,5 @@
 /experiments/saved_models/
 /experiments/data/clutrr/
 /experiments/wandb/
+/experiments/logs
 /.vscode
